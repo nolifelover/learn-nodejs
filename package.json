@@ -12,5 +12,8 @@
     "express"
   ],
   "author": "Todsaporn Sangboon <nolifelover@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^5.6.9"
+  }
 }
