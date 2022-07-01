@@ -49,9 +49,10 @@ const kkubContract = async () => {
     "function decimals() public view returns (uint256)",
     "function totalSupply() public view returns (uint256)",
     "function balanceOf(address _addr) public view returns (uint256)",
+    "event Transfer(address indexed from, address indexed to, uint256 tokens)",
   ];
   const kkubContract = new ethers.Contract(kkubAddress, abi, provider);
-  const totalSupply = await kkubContract.totalSupply();
+  /* const totalSupply = await kkubContract.totalSupply();
   const name = await kkubContract.name();
   const decimals = await kkubContract.decimals();
   console.log(`kkub name = ${name}`);
@@ -61,18 +62,28 @@ const kkubContract = async () => {
   console.log(`my wallet kkub = ${balanceOfMywallet / 10 ** decimals}`);
   const kubBalance = await provider.getBalance(walletAddres);
   console.log(`my wallet kub = ${kubBalance / 10 ** decimals}`);
+  */
+  kkubContract.on("Transfer", async (from, to, amount, event) => {
+    const blockNumber = await provider.getBlockNumber();
+    console.log(`transfer on block = ${blockNumber}`)
+    console.log(`${from} sent ${ethers.utils.formatEther(amount)} to ${to}`);
+    // The event object contains the verbatim log data, the
+    // EventFragment and functions to fetch the block,
+    // transaction and receipt and event functions
+
+  });
 };
 
-const multiContracts = async() => {
+const multiContracts = async () => {
   const [kkub, lumi] = await Promise.all([
     getErc20(kkubAddress, provider),
-    getErc20("0x95013Dcb6A561e6C003AED9C43Fb8B64008aA361", provider)
-  ])
+    getErc20("0x95013Dcb6A561e6C003AED9C43Fb8B64008aA361", provider),
+  ]);
   // const kkub = await getErc20(kkubAddress, provider);
-  console.log(`kkub %o`, kkub)
-  console.log(`lumi %o`, lumi)
+  console.log(`kkub %o`, kkub);
+  console.log(`lumi %o`, lumi);
 };
 
 // main();
-// kkubContract();
+kkubContract();
 // multiContracts();
